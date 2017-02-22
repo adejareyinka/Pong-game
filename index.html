@@ -3,19 +3,43 @@
 <head>
 	<title>Pong</title>
 	<style type="text/css">
+		body{
+			/*align-items: center;*/
+			background: #fff;
+			display: flex;
+			/*margin: 0;*/
+		}
 		canvas{
+			border: solid 1px #fff;
+			/*border-left: none;
+			border-right: none;*/
+			image-rendering: pixelated;
+			/*width: 100%;*/
 			/*position: absolute;*/
-			margin: auto;
+			/*margin: auto;*/
 			top: 0;
 			bottom: 0;
 			left: 0;
 			right: 0;
 		}
+		radio-inline{
+			border-right: 0;
+		}
+		side{
+			border-right: 0;
+		}
 	</style>
 </head>
 <body>
 <script type="text/javascript">
-	var WIDTH = 700, HEIGHT = 600, pi = Math.PI;
+function initAudioPlayer(){
+	audio = new Audio();
+	//audio.src = "Sleep Away.mp3";
+	audio.loop = true;
+	audio.play();
+}
+
+	var WIDTH = 600, HEIGHT = 500, pi = Math.PI;
 	var UpArrow = 38, DownArrow = 40;
 	var canvas, ctx, keystate;
 	var player, ai, ball;
@@ -93,12 +117,13 @@
 				this.vel.x = smash*(pdle===player ? 1 : -1)* this.speed*Math.cos(phi);
 				this.vel.y = smash*this.speed*Math.sin(phi);
 			}
-				if(0 > this.x + this.side || this.x > WIDTH){
-					this.serve(pdle===player ? 1 : -1);
-				}
-			},
+			if(0 > this.x + this.side || this.x > WIDTH){
+				this.serve(pdle===player ? 1 : -1);
+			}
+		},
 		draw: function(){
 			ctx.fillRect(this.x, this.y, this.side, this.side);
+			ctx.fillStyle = 'green';
 		}
 	};
 
@@ -116,6 +141,8 @@
 		document.addEventListener("keyup", function(evt){
 			delete keystate[evt.keyCode];
 		});
+
+		window.addEventListener("load", initAudioPlayer);
 
 		init();
 
@@ -154,6 +181,7 @@
 	function draw(){
 		ctx.fillRect(0,0,WIDTH, HEIGHT);
 		ctx.save();
+		//ctx.fillStyle = 'green';
 		ctx.fillStyle = "#fff";
 
 		ball.draw();
@@ -175,6 +203,58 @@
 	main();
 
 </script>
-
+	<body>
+    <div class="container">
+        <h1 class="page-header">
+            TIA-Pong
+        </h1>
+        <div class="row">
+            <div id="optionWrapper">
+                <h3>Controls Player1</h3>
+                <div class="input-group">
+                    <div class="input-group-addon">Bat Up</div>
+                    <input type="text" value="Use Arrow-Up" class="form-control" disabled="disabled">
+                </div><br>
+                <div class="input-group">
+                    <div class="input-group-addon">Bat Down</div>
+                    <input type="text" value="Use Arrow-Down" class="form-control" disabled="disabled">
+                </div>
+                <h3>Controls Player2</h3>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" onchange="toggleMultiplayer(this);" value="0">
+                        Enable Multiplayer (activates Player2)
+                    </label>
+                </div>
+                <div class="input-group">
+                    <div class="input-group-addon">Bat Up</div>
+                    <input type="text" value="O" class="form-control" disabled="disabled">
+                </div>
+                <div class="input-group">
+                    <div class="input-group-addon">Bat Down</div>
+                    <input type="text" value="L" class="form-control" disabled="disabled">
+                </div>
+                <h3>Themes</h3>
+                <button class="applyTheme btn btn-default" onclick="applyTheme('standard');">Standard Theme</button>
+                <button class="applyTheme btn btn-default" onclick="applyTheme('classic');">Classic Pong</button>
+                <button class="applyTheme btn btn-default" onclick="applyTheme('lego');">Lego Pong</button>
+                <button class="applyTheme btn btn-default" onclick="applyTheme('blackWhite');">Black and White</button>
+                <h3>Difficulty</h3>
+                <label class="radio-inline">
+                    <input type="radio" name="difficulty" onclick="changeDifficulty(this);" data-difficulty="easy" checked="checked">
+                    Easy
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="difficulty" onclick="changeDifficulty(this);" data-difficulty="normal">
+                    Normal
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="difficulty" onclick="changeDifficulty(this);" data-difficulty="hard">
+                    Hard
+                </label>
+            </div>
+        </div>
+        <hr />
+    </div>
 </body>
 </html>
